@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import Footer from "./compornents/Footer";
+import Header from "./compornents/Header";
+import ShowPage from "./compornents/sub-component/ShowPage";
+import Home from "./pages/Home";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function App() {
+  const [navbar, setNavbar] = useState();
+  useEffect(() => {
+    axios
+      .get("http://localhost:2001/navbar")
+      .then((data) => setNavbar(data.data));
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header navbar={navbar} />
+      <Routes>
+        <Route path="/" element={<Home navbar={navbar} />}>
+          {/* {navbar &&
+            Object.keys(navbar).map((list, index) => ( */}
+          <Route path={`/:list`} element={<ShowPage />}>
+            <Route path={`/:list/:id`} element />
+          </Route>
+          {/* ))} */}
+          {/* <Route path="/page/:id" element={<ShowPage />} /> */}
+        </Route>
+      </Routes>
+      <Footer />
     </div>
   );
 }
